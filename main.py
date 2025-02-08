@@ -91,6 +91,7 @@ def recommend():
         cast_places = request.form.get('cast_places', '[]')
         cast_profiles = request.form.get('cast_profiles', '[]')
         imdb_id = request.form.get('imdb_id', 'N/A')
+        tmdb_id = request.form.get('tmdb_id', 'N/A')  # TMDB ID to fetch reviews
         poster = request.form.get('poster', '')
         genres = request.form.get('genres', 'Unknown')
         overview = request.form.get('overview', 'No overview available.')
@@ -123,36 +124,33 @@ def recommend():
         cast_details = {cast_names[i]: [cast_ids[i], cast_profiles[i], cast_bdays[i], cast_places[i], cast_bios[i]] for
                         i in range(len(cast_places))}
 
-        # Web scraping to get user reviews from IMDb
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
-
-        request_url = f'https://www.imdb.com/title/{imdb_id}/reviews?ref_=tt_ov_rt'
-        imdb_request = urllib.request.Request(request_url, headers=headers)
+        # Fetch user reviews from TMDB API
+        api_key = "514500528da8f14e56884da74c72918c"  # Your TMDB API Key
+        tmdb_url = f"https://api.themoviedb.org/3/movie/{tmdb_id}/reviews?api_key={api_key}&language=en-US&page=1"
 
         try:
-            sauce = urllib.request.urlopen(imdb_request).read()
-            soup = bs.BeautifulSoup(sauce, 'lxml')
-            soup_result = soup.find_all("div", {"class": "text show-more__control"})
+            response = requests.get(tmdb_url)
+            if response.status_code == 200:
+                data = response.json()
+                reviews_list = []
+                reviews_status = []
 
-            reviews_list = []
-            reviews_status = []
-
-            for reviews in soup_result:
-                if reviews.string:
-                    reviews_list.append(reviews.string)
-                    # Passing the review to our model
-                    movie_review_list = np.array([reviews.string])
+                for review in data.get("results", []):
+                    reviews_list.append(review["content"])
+                    # Passing the review to our model for sentiment analysis
+                    movie_review_list = np.array([review["content"]])
                     movie_vector = vectorizer.transform(movie_review_list)
                     pred = clf.predict(movie_vector)
-                    reviews_status.append('Good' if pred else 'Bad')
+                    reviews_status.append("Good" if pred else "Bad")
 
-            # Combine reviews and their sentiment into a dictionary
-            movie_reviews = {reviews_list[i]: reviews_status[i] for i in range(len(reviews_list))}
+                # Combine reviews and their sentiment into a dictionary
+                movie_reviews = {reviews_list[i]: reviews_status[i] for i in range(len(reviews_list))}
+            else:
+                print(f"Failed to fetch TMDB reviews. Status Code: {response.status_code}")
+                movie_reviews = {}
 
         except Exception as e:
-            print(f"Error fetching IMDb reviews: {e}")
+            print(f"Error fetching TMDB reviews: {e}")
             movie_reviews = {}
 
         # Pass all data to the template
