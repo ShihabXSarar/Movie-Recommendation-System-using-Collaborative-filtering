@@ -17,14 +17,14 @@ $(function() {
   });
 });
 
-// Trigger movie details load when clicking on recommended movies
+// Called by top_movies.js too (via onclick="recommendcard(this)")
 function recommendcard(e) {
   var my_api_key = '514500528da8f14e56884da74c72918c';
   var title = e.getAttribute('title');
   load_details(my_api_key, title);
 }
 
-// Fetch basic details of the movie from TMDB
+// 1) fetch basic details from TMDB
 function load_details(my_api_key, title) {
   $.ajax({
     type: 'GET',
@@ -49,7 +49,7 @@ function load_details(my_api_key, title) {
   });
 }
 
-// Fetch similar movies
+// 2) fetch similar movies from Flask
 function movie_recs(movie_title, movie_id, my_api_key) {
   $.post("/similarity", { 'name': movie_title }, function(recs) {
     if (recs.includes("Sorry")) {
@@ -67,7 +67,7 @@ function movie_recs(movie_title, movie_id, my_api_key) {
   });
 }
 
-// Fetch complete movie details from TMDB
+// 3) fetch complete details from TMDB
 function get_movie_details(movie_id, my_api_key, arr, movie_title) {
   $.get(`https://api.themoviedb.org/3/movie/${movie_id}?api_key=${my_api_key}`, function(movie_details) {
     show_details(movie_details, arr, movie_title, my_api_key, movie_id);
@@ -77,7 +77,7 @@ function get_movie_details(movie_id, my_api_key, arr, movie_title) {
   });
 }
 
-// Fetch movie cast details
+// 4) fetch cast info
 function get_movie_cast(movie_id, my_api_key) {
   let cast_ids = [], cast_names = [], cast_chars = [], cast_profiles = [];
   $.ajax({
@@ -85,7 +85,7 @@ function get_movie_cast(movie_id, my_api_key) {
     url: `https://api.themoviedb.org/3/movie/${movie_id}/credits?api_key=${my_api_key}`,
     async: false,
     success: function(data) {
-      let top_cast = data.cast.slice(0, 10); // Get up to 10 main cast members
+      let top_cast = data.cast.slice(0, 10);
       top_cast.forEach(cast => {
         cast_ids.push(cast.id);
         cast_names.push(cast.name);
@@ -97,7 +97,7 @@ function get_movie_cast(movie_id, my_api_key) {
   return { cast_ids, cast_names, cast_chars, cast_profiles };
 }
 
-// Fetch individual cast details
+// 5) fetch more cast details
 function get_individual_cast(cast_ids, my_api_key) {
   let cast_bdays = [], cast_bios = [], cast_places = [];
   cast_ids.forEach(cast_id => {
@@ -115,21 +115,21 @@ function get_individual_cast(cast_ids, my_api_key) {
   return { cast_bdays, cast_bios, cast_places };
 }
 
-// Fetch reviews and send data to backend
+// 6) final show
 function show_details(movie_details, arr, movie_title, my_api_key, movie_id) {
-  let tmdb_id = movie_details.id; // Use TMDB ID
+  let tmdb_id = movie_details.id;
   let movie_cast = get_movie_cast(movie_id, my_api_key);
   let ind_cast = get_individual_cast(movie_cast.cast_ids, my_api_key);
 
   let details = {
     'title': movie_title,
-    'tmdb_id': tmdb_id, // Changed from IMDb to TMDB ID
+    'tmdb_id': tmdb_id,
     'poster': `https://image.tmdb.org/t/p/original${movie_details.poster_path}`,
-    'genres': movie_details.genres.map(genre => genre.name).join(", "),
+    'genres': (movie_details.genres || []).map(genre => genre.name).join(", "),
     'overview': movie_details.overview || "No overview available.",
     'rating': movie_details.vote_average,
-    'vote_count': movie_details.vote_count.toLocaleString(),
-    'release_date': new Date(movie_details.release_date).toDateString().split(' ').slice(1).join(' '),
+    'vote_count': movie_details.vote_count ? movie_details.vote_count.toLocaleString() : '0',
+    'release_date': movie_details.release_date ? new Date(movie_details.release_date).toDateString().split(' ').slice(1).join(' ') : 'N/A',
     'runtime': format_runtime(movie_details.runtime),
     'status': movie_details.status || "Unknown",
     'rec_movies': JSON.stringify(arr),
@@ -152,12 +152,15 @@ function show_details(movie_details, arr, movie_title, my_api_key, movie_id) {
   });
 }
 
-// Format runtime display
+// helper: format runtime
 function format_runtime(runtime) {
-  return runtime % 60 === 0 ? `${Math.floor(runtime / 60)} hour(s)` : `${Math.floor(runtime / 60)} hour(s) ${runtime % 60} min(s)`;
+  if (!runtime) return 'N/A';
+  return runtime % 60 === 0
+    ? `${Math.floor(runtime / 60)} hour(s)`
+    : `${Math.floor(runtime / 60)} hour(s) ${runtime % 60} min(s)`;
 }
 
-// Fetch posters for recommended movies
+// helper: fetch posters for recommended movies
 function get_movie_posters(arr, my_api_key) {
   let arr_poster_list = [];
   for (let m of arr) {
@@ -166,7 +169,8 @@ function get_movie_posters(arr, my_api_key) {
       url: `https://api.themoviedb.org/3/search/movie?api_key=${my_api_key}&query=${m}`,
       async: false,
       success: function(m_data) {
-        arr_poster_list.push(`https://image.tmdb.org/t/p/original${m_data.results[0]?.poster_path}`);
+        let path = m_data.results?.[0]?.poster_path;
+        arr_poster_list.push(`https://image.tmdb.org/t/p/original${path}`);
       }
     });
   }
