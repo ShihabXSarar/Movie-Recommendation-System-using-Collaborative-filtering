@@ -21,7 +21,7 @@ def create_similarity():
     count_matrix = cv.fit_transform(data['comb'])
     # creating a similarity score matrix
     similarity = cosine_similarity(count_matrix)
-    return data,similarity
+    return data, similarity
 
 def rcmd(m):
     m = m.lower()
@@ -38,19 +38,17 @@ def rcmd(m):
         lst = sorted(lst, key = lambda x:x[1] ,reverse=True)
         lst = lst[1:11] # excluding first item since it is the requested movie itself
         l = []
-        for i in range(len(lst)):
-            a = lst[i][0]
+        for item in lst:
+            a = item[0]
             l.append(data['movie_title'][a])
         return l
 
 # converting list of string to list (eg. "["abc","def"]" to ["abc","def"])
-
 def convert_to_list(my_list):
     my_list = my_list.split('","')
     my_list[0] = my_list[0].replace('["','')
     my_list[-1] = my_list[-1].replace('"]','')
     return my_list
-
 
 # to get suggestions of movies
 def get_suggestions():
@@ -58,25 +56,41 @@ def get_suggestions():
     return list(data['movie_title'].str.capitalize())
 
 # Flask API
-
 app = Flask(__name__)
 
 @app.route("/")
 @app.route("/home")
 def home():
     suggestions = get_suggestions()
-    return render_template('home.html',suggestions=suggestions)
+
+    # ==== NEW PART: Fetching popular movies from TMDB ====
+    tmdb_api_key = "514500528da8f14e56884da74c72918c"  # Use your key
+    tmdb_popular_url = f"https://api.themoviedb.org/3/movie/popular?api_key={tmdb_api_key}&language=en-US&page=1"
+    popular_movies = []
+    try:
+        resp = requests.get(tmdb_popular_url)
+        if resp.status_code == 200:
+            data = resp.json()
+            popular_movies = data.get("results", [])
+        else:
+            print("Failed to fetch popular from TMDB:", resp.status_code)
+    except Exception as e:
+        print("Exception fetching popular:", e)
+    # === End of new part ===
+
+    # Pass everything to home.html
+    return render_template('home.html',
+                           suggestions=suggestions,
+                           popular_movies=popular_movies)
 
 @app.route("/similarity",methods=["POST"])
 def similarity():
     movie = request.form['name']
     rc = rcmd(movie)
-    if type(rc)==type('string'):
+    if isinstance(rc, str):
         return rc
     else:
-        m_str="---".join(rc)
-        return m_str
-
+        return "---".join(rc)
 
 @app.route("/recommend", methods=["POST"])
 def recommend():
@@ -164,7 +178,6 @@ def recommend():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 if __name__ == '__main__':
     app.run(debug=True)
