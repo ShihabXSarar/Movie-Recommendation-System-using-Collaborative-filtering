@@ -11,66 +11,284 @@
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
   <!-- Auto Complete -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css">
   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+      <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style1.css') }}">
   <script type="text/javascript">
     var films = {{suggestions|tojson}};
   </script>
 
 </head>
 
-<body id="content" style="font-family: 'Noto Sans JP', sans-serif;">
+<body id="home" style="font-family: 'Noto Sans JP', sans-serif;">
 
-	<div class="ml-container" style="display: block;">
-		<a href="https://github.com/ShihabXSarar/Movie-Recommendation-System-using-Collaborative-filtering" target="_blank" class="github-corner" title="View source on GitHub">
-		      <svg data-toggle="tooltip"
-		      data-placement="left" width="80" height="80" viewBox="0 0 250 250"
-			style="fill:#e50914; color:#fff; position: fixed;z-index:100; top: 0; border: 0; right: 0;" aria-hidden="true">
-			<path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
-			<path
-			  d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
-			  fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
-			<path
-			  d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
-			  fill="currentColor" class="octo-body"></path>
-		      </svg>
-		    </a>
-    <center><h1 style=""> BHAI BHAI Recommender System</h1></center>
-    <div class="form-group shadow-textarea" style="margin-top: 30px;text-align: center;color: white;">
-        <input type="text" name="movie" class="movie form-control" id="autoComplete" autocomplete="off" placeholder="Enter the Movie Name/title" style="background-color: #ffffff;border-color:#ffffff;width: 60%;color: #181818" required="required" />
-        <br>
-    </div>
 
-    <div class="form-group" style="text-align: center;">
-      <button class="btn btn-primary btn-block movie-button" style="background-color: #e50914;text-align: center;border-color: #e50914;width:120px;" disabled="true" >Search</button><br><br>
-    </div>
-	</div>
 
-  <div id="loader" class="text-center">
+  <!-- EXACT same navbar, search, etc. as before -->
+  <!-- menu start -->
+   <section  class="fixed-top">
+     <div class="s-1 shadow">
+       <div class="container">
+        <nav class="navbar navbar-expand-lg  text-light ">
+          <div class="div111"><a class="" href="/"><img style="max-width: 40px;" class="h-logo" src="https://cdn-icons-png.flaticon.com/512/777/777242.png" alt=""></a></div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item  lllll"><a class="nav-link llll"  href="/">Home </a></li>
+
+
+
+
+
+
+              <div class="dropdown show lllll d-flex justify-content-center align-items-center ">
+  <a class="dropdown-toggle px-3 " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Genre
+  </a>
+
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+   <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Comedy</a></li>
+    <li><a class="dropdown-item" href="#">Drama</a></li>
+    <li><a class="dropdown-item" href="#">Horror</a></li>
+    <li><a class="dropdown-item" href="#">Sci-Fi</a></li>
   </div>
-  
-  <div class="fail">
-    <center><h3>Sorry! try another movie name/title </h3></center>
+</div>
+
+
+
+
+
+              <li class="nav-item lllll"><a class="nav-link llll" href="#AboutUs"> About Us</a></li>
+              <li class="nav-item lllll"><a class="nav-link llll" href="#contact"> Contact Us </a></li>
+              <li class="nav-item lllll"><a class="nav-link llll" href="#footer"> Footer  </a></li></ul>
+            <a style="cursor: pointer;" class="text-light mx-3 "  data-toggle="collapse" data-target="#toggleSection1">
+<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0,0,255.99365,255.99365">
+<g fill="#fffbfb" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M21,3c-9.37891,0 -17,7.62109 -17,17c0,9.37891 7.62109,17 17,17c3.71094,0 7.14063,-1.19531 9.9375,-3.21875l13.15625,13.125l2.8125,-2.8125l-13,-13.03125c2.55469,-2.97656 4.09375,-6.83984 4.09375,-11.0625c0,-9.37891 -7.62109,-17 -17,-17zM21,5c8.29688,0 15,6.70313 15,15c0,8.29688 -6.70312,15 -15,15c-8.29687,0 -15,-6.70312 -15,-15c0,-8.29687 6.70313,-15 15,-15z"></path></g></g>
+</svg>
+    </a>
+
+
+
+
+          </div>
+        </nav>
+
+
+       </div>
+     </div>
+   </section>
+   <!-- menu  end -->
+
+
+
+<!---->
+
+  <!-- EXACT same search area -->
+  <div class="collapse" id="toggleSection1">
+    <div id="content">
+      <div class="ml-container pt-5" style="text-align:center;">
+        <h1 class="text-center mt-5" style="color:#02A9F4;">
+
+        </h1>
+        <div class="form-group shadow-textarea"
+             style="margin-top:30px;text-align:center;color:white;">
+          <input type="text" name="movie"
+                 class="movie form-control"
+                 id="autoComplete"
+                 autocomplete="off"
+                 placeholder="Enter the Movie Name/title"
+                 style="background-color:#ffffff;border-color:#ffffff;width:60%;color:#181818"
+                 required="required" />
+          <br>
+        </div>
+        <div class="form-group" style="text-align:center;">
+          <button class="btn btn-primary btn-block movie-button"
+                  style="background-color:#e50914;text-align:center;border-color:#e50914;width:120px;"
+                  disabled="true">
+            Search
+          </button>
+          <br><br>
+        </div>
+      </div>
+      <div id="loader" class="text-center"></div>
+      <div class="fail">
+        <center><h3>Sorry! try another movie name/title</h3></center>
+      </div>
+      <div class="results">
+        <center><h2 id="name" class="text-uppercase"></h2></center>
+      </div>
+    </div>
   </div>
 
-	<div class="results">
+  <!-- same rest of your sections... -->
+
+  <!---->
+ <section   class="mt-5   ">
+     <div class="s-2  mt-2">
+       <div class="container ">
+         <div class="row">
+           <div class="col-md-12 d-flex flex-column justify-content-center">
+             <div class="s-1-text">
+               <h1 class="top-headding text-center">BHAI BHAI   <span class="g-color-text">Recommender</span> System</h1>
+             </div>
+
+             <!-- dropudown -->
+
+             <!-- dropudown end -->
+
+           </div>
+
+         </div>
+       </div>
+     </div>
+   </section>
+
+
+   <!-- section-2 end -->
+
+
+  <!-- NEW Popular High Rated Movies Section -->
+  <div class="container mt-5 pt-5 ">
+    <center><h2 class="pt-2b" style="color:white;"> Popular High Rated Movies</h2></center>
+    <div class="movie-content mt-3" id="popular_grid"></div>
     <center>
-      <h2 id="name" class="text-uppercase"></h2>
+      <button id="loadMoreBtn" class="btn btn-danger"
+              style="background-color:#e50914;border-color:#e50914;width:150px;margin:20px;">
+        Load More
+      </button>
     </center>
-	</div>
-	
-	<div class="footer" style="">Made with<span style="font-size:150%;color:red;"> &hearts; </span>by Shihab Sarar and shandip bishwas</div>
-	
-	<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
-  <script type="text/javascript" src="{{url_for('static', filename='autocomplete.js')}}"></script>
+  </div>
+  <!-- End of new section -->
 
+  <!-- everything else: contact, footer, etc. is unchanged -->
+  <!--faq-->
+
+
+
+
+
+
+
+
+
+
+
+<!--contact-->
+<!-- section-3-end -->
+
+<div id="contact" class="mb-5"></div>
+<!-- last section -->
+<section  class="bg2 w-100 ">
+  <div class="container py-5">
+    <div class="logo text-center py-3  " ><img width="150px" src="img/logo.png" alt=""></div>
+    <div class="box1 mt-5 sec1" >
+      <div class="row text-light">
+        <div class="col-md-4">
+          <div class="text-center bottom-margin"><h3>our visions</h3></div>
+          <span class="text-center123"><p class="vertion-p text-justify">  nulla nemo alias molestias modi tenetur ut? Sed perferendis, dignissimos ratione in voluptate numquam facere ut earum sapiente quas
+          </p></span>
+        </div>
+        <div class="col-md-4 ">
+          <div class="text-center bottom-margin"><h3>Contact Us</h3></div>
+          <span class="text-center123">
+            <div class=" text-justify">
+              <p><span class="c-con mx-2"><i class="fa-solid fa-phone"></i></span>01762048953</p>
+            <p><span class="c-con mx-2"><i class="fa-solid fa-envelope uniqure"></i></span>hi@movie.com</p>
+            <p><span class="c-con mx-2"><i class="fa-solid fa-location-dot"></i></span>Dhaka-1207, Bangladesh</p>
+            <p><span class="c-con mx-2"><i class="fa-solid fa-people-group"></i></span>Facebook Group</p>
+            </div>
+          </span>
+        </div>
+        <div class="col-md-4">
+          <div class="text-center bottom-margin"><h3>our visions</h3></div>
+          <span class="text-center123">
+            <p class="text-light  p-h"> <a href="">Terms & Conditions </a><br><a href="">Privacy Policy</a> <br><a href="">Refund Policy</a>
+            </p>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+<!--contact end-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- section-3-end -->
+
+
+
+  <div class="follow-on-us text-center py-5 text-light">
+    <h4 class="mb-2">Follow us on</h4>
+    <div class="follow-icon">
+      <a class="footer-icon" href="#"><i class="fa-brands fa-facebook-f www"></i></a>
+      <a class="footer-icon" href="#"><i class="fa-brands fa-youtube www"></i></a>
+      <a class="footer-icon" href="#"><i class="fa-brands fa-twitter www"></i></a>
+      <a class="footer-icon" href="#"><i class="fa-brands fa-instagram www"></i></a>
+
+    </div>
+  </div>
+
+
+
+
+
+  <div id="footer" class="copy-right-section text-light text-center mt-5">
+    <h4 >© All rights reserved</h4>
+    <h6 class="mb-0"></h6>
+    <p class="pb-5 opacity-75">Version 1.0</p>
+  </div>
+</section>
+<!-- last section end -->
+
+  <!-- TarekRaafat autoComplete -->
+  <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='autocomplete.js') }}"></script>
+
+  <!-- jQuery + your recommend logic -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script type="text/javascript" src="{{url_for('static', filename='recommend.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='recommend.js') }}"></script>
+
+  <!-- Our new popular.js for the 'Load More' button -->
+  <script type="text/javascript" src="{{ url_for('static', filename='popular.js') }}"></script>
+
+  <!-- Bootstrap + Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 
 </body>
 </html>

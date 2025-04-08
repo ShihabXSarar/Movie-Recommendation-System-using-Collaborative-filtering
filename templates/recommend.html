@@ -17,10 +17,17 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <style>
+    h1.top-headding.text-center {
+    display: none;
+}
+    </style>
 
 </head>
 
 <body id="content">
+
+
 	<div class="results">
 	    <center>
 	      <h2 id="name" class="text-uppercase">{{title}}</h2>
@@ -28,33 +35,33 @@
 	</div>
 	<br>
 
-<div id="mycontent">
-    <div id="mcontent">
-      <div class="poster-lg">
-        <img class="poster" style="border-radius: 40px;margin-left: 90px;" height="400" width="250" src={{poster}}>
-      </div>
-      <div class="poster-sm text-center">
-        <img class="poster" style="border-radius: 40px;margin-bottom: 5%;" height="400" width="250" src={{poster}}>
-      </div>
-      <div id="details">
-        <br/>
-        <h6 id="title" style="color:white;">Main Title: &nbsp;{{title}}</h6>
-        <h6 id="overview" style="color:white;max-width: 85%">Overvire: <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{overview}}</h6>
-        <h6 id="vote_average" style="color:white;">RATING: &nbsp;{{vote_average}}/10 ({{vote_count}} votes)</h6>
-        <h6 id="genres" style="color:white;">GENRE: &nbsp;{{genres}}</h6>
-        <h6 id="date" style="color:white;">RELEASE DATE: &nbsp;{{release_date}}</h6>
-        <h6 id="runtime" style="color:white;">RUNTIME: &nbsp;{{runtime}}</h6>
-        <h6 id="status" style="color:white;">STATUS: &nbsp;{{status}}</h6>
+
+
+
+
+<div class="container  ">
+  <div id="contact" class="box mb-3 sec1">
+    <div class="row">
+      <div class="col-md-6 p-3">  <img style="max-width: 500px; max-height: 500px; "  src={{poster}}> </div>
+      <div class="col-md-6">
+               <h6 id="title" style="color:white;">Main Title: &nbsp;{{title}}</h6>
+          <h6 id="overview" style="color:white;max-width: 85%">Overvire: <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{overview}}</h6>
+          <h6 id="vote_average" style="color:white;">RATING: &nbsp;{{vote_average}}/10 ({{vote_count}} votes)</h6>
+          <h6 id="genres" style="color:white;">GENRE: &nbsp;{{genres}}</h6>
+          <h6 id="date" style="color:white;">RELEASE DATE: &nbsp;{{release_date}}</h6>
+          <h6 id="runtime" style="color:white;">RUNTIME: &nbsp;{{runtime}}</h6>
+          <h6 id="status" style="color:white;">STATUS: &nbsp;{{status}}</h6>
       </div>
     </div>
+  </div>
+
 </div>
-<br/>
 
 {% for name, details in cast_details.items() if not cast_details.hidden %}
   <div class="modal fade" id="{{details[0]}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header" style="background-color: #e50914;color: white;">
+        <div class="modal-header lllll bg-dark" style="background-color: #e50914;color: white;">
           <h5 class="modal-title" id="exampleModalLabel3">{{name}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" style="color: white">&times;</span>
@@ -94,7 +101,7 @@
             <div class="imghvr">
               <img class="card-img-top cast-img" id="{{details[0]}}" height="360" width="240" alt="{{name}} - profile" src="{{details[2]}}">
               <figcaption class="fig">
-                <button class="card-btn btn btn-danger"> Know More </button>
+                <button class="btn btn-dark lllll"> Know More </button>
               </figcaption>
             </div>
             <div class="card-body">
@@ -120,7 +127,7 @@
 
             <tbody>
 		      {% for review, status in reviews.items() if not reviews.hidden %}
-		      <tr style="background-color:#e5091485;">
+		      <tr style="background-color:#06111A;">
               	  <td>{{review}}</td>
 	              <td><center>
 	                  {{status}} :
@@ -156,7 +163,7 @@
           <div class="imghvr">
             <img class="card-img-top" height="360" width="240" alt="{{title}} - poster" src={{poster}}>
             <figcaption class="fig">
-              <button class="card-btn btn btn-danger">View </button>
+              <button class="btn btn-dark lllll">View </button>
             </figcaption>
            </div>
           <div class="card-body">
